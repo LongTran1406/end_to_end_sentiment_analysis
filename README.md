@@ -117,22 +117,22 @@ docker-compose ps
 docker-compose logs -f
 ```
 
-# Access API
-# API: http://localhost:8000
+Access API
+API: http://localhost:8000
 
 Option 2: Run Locally
-# Clone repo
+### Clone repo
 ```bash
 git clone <your-repo-url>
 cd project
 ```
 
-# Install dependencies
+### Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-# Start API
+### Start API
 ```bash
 python app/api/main.py
 ```
@@ -192,24 +192,60 @@ Output:
 4. Python Example Using Live API:
 
 ```bash
-import requests, time
+import requests
+import time
 
 BASE_URL = "http://3.25.119.111:8000"
 
-# Start session
-client_id = requests.get(f"{BASE_URL}/start_session").json()["client_id"]
+# 1. Start a new session
+resp = requests.get(f"{BASE_URL}/start_session")
+resp.raise_for_status()
+client_id = resp.json()["client_id"]
+print(f"Session started: {client_id}")
 
-# Send texts
-texts = ["I hate you", "Hello my name is Long, nice to meet you", "What is your name", "I love you"]
-requests.post(f"{BASE_URL}/predict", json={"client_id": client_id, "texts": texts})
+# 2. Send texts for prediction
+texts = [
+    "I hate you",
+    "Hello my name is Long, nice to meet you",
+    "What is your name",
+    "I love you"
+]
 
-# Poll results
+payload = {"client_id": client_id, "texts": texts}
+resp = requests.post(f"{BASE_URL}/predict", json=payload)
+resp.raise_for_status()
+print(resp.json())
+
+# 3. Poll for results
 results = []
 while not results:
     time.sleep(1)
-    results = requests.get(f"{BASE_URL}/results", params={"client_id": client_id}).json()
+    resp = requests.get(f"{BASE_URL}/results", params={"client_id": client_id})
+    resp.raise_for_status()
+    results = resp.json()
 
-# Display results
+print("Prediction results:")
 for r in results:
-    print(f"Text: {r['text']}, TF-IDF: {r['tfidf_prediction']:.3f}, BERT: {r['bert_prediction']:.3f})
+    print(f"Text: {r['text']}")
+    print(f"TF-IDF: {r['tfidf_prediction']:.3f}, BERT: {r['bert_prediction']:.3f}")
+    print("---")
+```
+
+Output:
+```bash
+Session started: db6ee8ce-cb21-4d24-9fed-7d5e205df0f0
+{'message': '4 texts sent to Kafka for client db6ee8ce-cb21-4d24-9fed-7d5e205df0f0'}
+Prediction results:
+Text: I hate you
+TF-IDF: 0.993, BERT: 0.627
+---
+Text: Hello my name is Long, nice to meet you
+TF-IDF: 0.132, BERT: 0.495
+---
+Text: What is your name
+TF-IDF: 0.194, BERT: 0.499
+---
+Text: I love you
+TF-IDF: 0.308, BERT: 0.484
+---
 ```
