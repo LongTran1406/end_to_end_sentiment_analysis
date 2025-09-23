@@ -68,6 +68,9 @@ Python Integration: Easily call the API from Python scripts
 │   ├── Dockerfile.spark
 │   └── spark_streaming_job.py
 ```
+## 📊 Project Flow
+
+![Project Flow](img/project-flow.png)
 
 ## Pipelines
 ### Training Pipeline
