@@ -1,0 +1,16 @@
+data:
+  raw_folder: 'data/raw'
+  raw_file: 'raw_dataset.csv'
+
+  cleaned_folder: 'data/cleaned'
+  cleaned_file: 'cleaned_dataset.csv'
+
+  real_time_folder: 'data/real_time'
+  real_time_file: 'real_time_dataset.csv'
+
+model:
+  model_path: 'model/tfidf'
+  model_file: 'svm_pipeline.pkl'
+
+  bert_model_path: 'model/bert'
+  bert_model_file: 'distilbert_model.pt'

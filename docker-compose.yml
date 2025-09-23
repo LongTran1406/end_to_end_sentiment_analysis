@@ -1,0 +1,43 @@
+services:
+  zookeeper:
+    image: bitnami/zookeeper:3.9
+    ports:
+      - "2181:2181"
+    environment:
+      ALLOW_ANONYMOUS_LOGIN: "yes"
+
+  kafka:
+    image: bitnami/kafka:3.5
+    healthcheck:
+      test: ["CMD", "kafka-topics.sh", "--bootstrap-server", "kafka:9092", "--list"]
+      interval: 5s
+      retries: 10
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+    depends_on:
+      - zookeeper
+
+  api:
+    build:
+      context: .
+      dockerfile: app-ml/entrypoint/Dockerfile
+    container_name: flask-api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - kafka
+
+  spark:
+    build:
+      context: .
+      dockerfile: spark_jobs/Dockerfile.spark
+    container_name: spark
+    depends_on:
+      - kafka
