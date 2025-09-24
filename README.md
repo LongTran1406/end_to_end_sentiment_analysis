@@ -103,8 +103,8 @@ Postprocessing: Format outputs and return results via API or store in Kafka resu
 Option 1: Docker (Recommended)
 ### Clone repo
 ```bash
-git clone <your-repo-url>
-cd project
+git clone https://github.com/LongTran1406/end_to_end_sentiment_analysis.git
+cd end_to_end_sentiment_analysis
 ```
 
 ### Start services
@@ -124,8 +124,8 @@ API: http://localhost:8000
 Option 2: Run Locally
 ### Clone repo
 ```bash
-git clone <your-repo-url>
-cd project
+git clone https://github.com/LongTran1406/end_to_end_sentiment_analysis.git
+cd end_to_end_sentiment_analysis
 ```
 
 ### Install dependencies
@@ -133,9 +133,10 @@ cd project
 pip install -r requirements.txt
 ```
 
-### Start API
+### Start API and Spark Streaming
 ```bash
-python app/api/main.py
+python app-ml\entrypoint\inference_api.py
+python spark_jobs\spark_streaming_job.py
 ```
 
 ## Live Cloud Demo (EC2)
