@@ -75,15 +75,13 @@ Python Integration: Easily call the API from Python scripts
 ## Pipelines
 ### Training Pipeline
 
-Preprocessing: Clean and encode texts for TF-IDF and BERT input.
-
-Feature Engineering: Prepare TF-IDF vectors and BERT embeddings.
+Preprocessing and Feature Engineering: Clean and encode texts for TF-IDF and BERT input.
 
 Model Training:
 
-Train TF-IDF + SVM classifier.
+Train TF-IDF + SVM classifier. (Using MLflow for keeping tracks the parameters and scoring metrices, e.g. Accuracy, F1, Recall, Precision)
 
-Fine-tune or use pretrained BERT (DistilBERT) for sentiment classification.
+Train DistilBERT for sentiment classification.
 
 Model Saving: Store trained models for inference (svm_pipeline.pkl and distilbert_model.pt).
 
@@ -91,7 +89,7 @@ Model Saving: Store trained models for inference (svm_pipeline.pkl and distilber
 
 Input Handling: Receive texts via Flask API or real-time Kafka stream.
 
-Spark Streaming: Process incoming messages in real time using PySpark, apply preprocessing, and feed them into models.
+Spark Streaming: Process incoming messages in real time using PySpark, apply preprocessing, feature engineering and feed them into models.
 
 Prediction:
 
