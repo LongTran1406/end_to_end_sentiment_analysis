@@ -1,4 +1,4 @@
-# Sentiment Analysis API
+# Sentinex: Real-Time Toxicity Detection API
 ## Overview
 
 This project provides real-time sentiment analysis of user-provided text using TF-IDF and BERT models.
