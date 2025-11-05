@@ -83,12 +83,6 @@ Model Saving: Store trained models for inference (svm_pipeline.pkl and distilber
 
 Input Handling: Receive texts via Flask API
 
-<<<<<<< HEAD
-Spark Streaming: Process incoming messages in real time using PySpark, apply preprocessing, feature engineering and feed them into models.
-=======
-Input Streaming: Process incoming messages in real time, apply preprocessing, and feed them into models.
->>>>>>> ecae94c (t)
-
 Prediction:
 
 Predict sentiment using TF-IDF + SVM.
