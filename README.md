@@ -18,13 +18,13 @@ Python Integration: Easily call the API from Python scripts
 ## Project Architecture
 
 ```bash
-├── .env
+├── .gitignore
 ├── .ipynb_checkpoints
 │   └── Untitled-checkpoint.ipynb
-├── README_Spark_Kafka.md
+├── Dockerfile
+├── README.md
 ├── app-ml
 │   ├── entrypoint
-│   │   ├── Dockerfile
 │   │   ├── inference.py
 │   │   ├── inference_api.py
 │   │   └── train.py
@@ -55,18 +55,12 @@ Python Integration: Easily call the API from Python scripts
 │   └── real_time
 │       ├── real_time_dataset.csv
 │       └── test.py
-├── docker-compose.yml
-├── generate_tree.py
 ├── model
 │   ├── bert
 │   │   └── distilbert_model.pt
 │   └── tfidf
 │       └── svm_pipeline.pkl
 ├── requirements.txt
-├── result_api.py
-├── spark_jobs
-│   ├── Dockerfile.spark
-│   └── spark_streaming_job.py
 ```
 ## 📊 Project Flow
 
@@ -137,51 +131,20 @@ cd end_to_end_sentiment_analysis
 pip install -r requirements.txt
 ```
 
-### Start API and Spark Streaming
+### Start API
 ```bash
 python app-ml\entrypoint\inference_api.py
-python spark_jobs\spark_streaming_job.py
 ```
 
 ## Live Cloud Demo (EC2)
-
-1. Start a session:
-
-```bash
-curl http://3.25.119.111:8000/start_session
-```
-
-
-Output:
-
-```bash
-{
-  "client_id": "d02965ae-3928-481b-8704-493aca5df0a2"
-}
-```
-
-
-2. Send texts for prediction:
+### Send texts for prediction:
 
 ```bash 
 curl -X POST http://3.25.119.111:8000/predict \
 -H "Content-Type: application/json" \
--d "{\"client_id\":\"d02965ae-3928-481b-8704-493aca5df0a2\",\"texts\":[\"I hate you\",\"Hello my name is Long, nice to meet you\",\"What is your name\",\"I love you\"]}"
+-d "{\"texts\":[\"I hate you\",\"Hello my name is Long, nice to meet you\",\"What is your name\",\"I love you\"]}"
 ```
 
-
-Output:
-
-```bash
-{
-  "message": "4 texts sent to Kafka for client d02965ae-3928-481b-8704-493aca5df0a2"
-}
-```
-
-3. Get prediction results:
-```bash
-curl "http://3.25.119.111:8000/results?client_id=d02965ae-3928-481b-8704-493aca5df0a2"
-```
 
 Output:
 
@@ -192,66 +155,4 @@ Output:
   {"text":"What is your name","tfidf_prediction":0.1940,"bert_prediction":0.4987,"client_id":"d02965ae-3928-481b-8704-493aca5df0a2"},
   {"text":"I love you","tfidf_prediction":0.3082,"bert_prediction":0.4843,"client_id":"d02965ae-3928-481b-8704-493aca5df0a2"}
 ]
-```
-
-
-4. Python Example Using Live API:
-
-```bash
-import requests
-import time
-
-BASE_URL = "http://3.25.119.111:8000"
-
-# 1. Start a new session
-resp = requests.get(f"{BASE_URL}/start_session")
-resp.raise_for_status()
-client_id = resp.json()["client_id"]
-print(f"Session started: {client_id}")
-
-# 2. Send texts for prediction
-texts = [
-    "I hate you",
-    "Hello my name is Long, nice to meet you",
-    "What is your name",
-    "I love you"
-]
-
-payload = {"client_id": client_id, "texts": texts}
-resp = requests.post(f"{BASE_URL}/predict", json=payload)
-resp.raise_for_status()
-print(resp.json())
-
-# 3. Poll for results
-results = []
-while not results:
-    time.sleep(1)
-    resp = requests.get(f"{BASE_URL}/results", params={"client_id": client_id})
-    resp.raise_for_status()
-    results = resp.json()
-
-print("Prediction results:")
-for r in results:
-    print(f"Text: {r['text']}")
-    print(f"TF-IDF: {r['tfidf_prediction']:.3f}, BERT: {r['bert_prediction']:.3f}")
-    print("---")
-```
-
-Output:
-```bash
-Session started: db6ee8ce-cb21-4d24-9fed-7d5e205df0f0
-{'message': '4 texts sent to Kafka for client db6ee8ce-cb21-4d24-9fed-7d5e205df0f0'}
-Prediction results:
-Text: I hate you
-TF-IDF: 0.993, BERT: 0.627
----
-Text: Hello my name is Long, nice to meet you
-TF-IDF: 0.132, BERT: 0.495
----
-Text: What is your name
-TF-IDF: 0.194, BERT: 0.499
----
-Text: I love you
-TF-IDF: 0.308, BERT: 0.484
----
 ```
