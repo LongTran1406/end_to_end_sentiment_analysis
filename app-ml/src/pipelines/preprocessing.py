@@ -7,6 +7,7 @@ class Preprocessing:
         self.config = config
     
     def select_feature(self, df):
+        print(df)
         if 'toxicity' in df.columns:
             df = df[['comment_text', 'toxicity']]
         return df

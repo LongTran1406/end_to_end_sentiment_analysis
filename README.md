@@ -70,7 +70,7 @@ Python Integration: Easily call the API from Python scripts
 ```
 ## 📊 Project Flow
 
-![Project Flow](img/project-flow.png)
+![Project Flow](architecture.png)
 
 ## Pipelines
 ### Training Pipeline
@@ -87,9 +87,13 @@ Model Saving: Store trained models for inference (svm_pipeline.pkl and distilber
 
 ### Inference Pipeline
 
-Input Handling: Receive texts via Flask API or real-time Kafka stream.
+Input Handling: Receive texts via Flask API
 
+<<<<<<< HEAD
 Spark Streaming: Process incoming messages in real time using PySpark, apply preprocessing, feature engineering and feed them into models.
+=======
+Input Streaming: Process incoming messages in real time, apply preprocessing, and feed them into models.
+>>>>>>> ecae94c (t)
 
 Prediction:
 
@@ -97,7 +101,7 @@ Predict sentiment using TF-IDF + SVM.
 
 Predict sentiment using BERT.
 
-Postprocessing: Format outputs and return results via API or store in Kafka result queue.
+Postprocessing: Format outputs and return results via JSON format.
 
 ## Quick Start
 Option 1: Docker (Recommended)

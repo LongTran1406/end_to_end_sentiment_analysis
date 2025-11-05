@@ -26,8 +26,14 @@ class PipelineRunner:
         self.postprocessing.run_train(tfidf_model, bert_model)
     
     def run_inference(self, df, model_type = 'both', model_loaded = False, tfidf_model = None, bert_model = False, bert_tokenizer = None):
+        # print(1)
         df = self.preprocess.run(df)
+        # print(2)
         df = self.feature_engineer.run(df)
+        # print(3)
         tfidf_preds, bert_preds = self.inference.run(df, model_type, model_loaded, tfidf_model, bert_model, bert_tokenizer)
+        # print(4)
         tfidf_preds, bert_preds = self.postprocessing.run_inference(tfidf_preds, bert_preds)
+        # print(5)
+        # print(tfidf_preds, bert_preds)
         return tfidf_preds, bert_preds
